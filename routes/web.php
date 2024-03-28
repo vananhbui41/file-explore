@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,11 @@ Route::get('/', function () {
     ]);
 });
 
+Route::controller(FileController::class)
+    ->middleware(['auth', 'verified'])->group(function() {
+        Route::get('/my-files', [FileController::class,'myFiles'])->name('my-files');
+        Route::get('/folders/create', [FileController::class, 'createFolder'])->name('folder.create');
+    });
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
