@@ -72,10 +72,10 @@ function onShow() {
 }
 
 function createFolder() {
-    form.post(route("folders.create"), {
+    form.post(route("folder.create"), {
         preserveScroll: true,
         onSuccess: () => {
-            closeModal();
+            // closeModal();
             emit("update:modelValue", false);
             form.reset();
             // TODO: show success message

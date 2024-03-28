@@ -29,7 +29,7 @@ Route::get('/', function () {
 Route::controller(FileController::class)
     ->middleware(['auth', 'verified'])->group(function() {
         Route::get('/my-files', [FileController::class,'myFiles'])->name('my-files');
-        Route::get('/folders/create', [FileController::class, 'createFolder'])->name('folder.create');
+        Route::post('/folders/create', [FileController::class, 'createFolder'])->name('folder.create');
     });
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
