@@ -27,8 +27,10 @@ Route::get('/', function () {
 });
 
 Route::controller(FileController::class)
-    ->middleware(['auth', 'verified'])->group(function() {
-        Route::get('/my-files', [FileController::class,'myFiles'])->name('my-files');
+    ->middleware(['auth', 'verified'])->group(function () {
+        Route::get('/my-files/{folder?}', [FileController::class, 'myFiles'])
+            ->where('folder', '(.*)')
+            ->name('my-files');
         Route::post('/folders/create', [FileController::class, 'createFolder'])->name('folder.create');
     });
 Route::get('/dashboard', function () {
@@ -41,4 +43,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

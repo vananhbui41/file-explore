@@ -9,9 +9,18 @@ use Inertia\Inertia;
 
 class FileController extends Controller
 {
-    public function myFiles()
+    public function myFiles(string $folder = null)
     {
-        $folder = $this->getRoot();
+        if ($folder) {
+            $folder = File::query()
+                ->where('creator_id', auth()->id())
+                ->where('path', $folder)->firstOrFail();
+        }
+
+        if (!$folder) {
+            $folder = $this->getRoot();
+        }
+
         $files = File::query()
             ->where('parent_id', $folder->id)
             ->where('creator_id', auth()->id())
@@ -21,7 +30,11 @@ class FileController extends Controller
 
         $files = FileResource::collection($files);
 
-        return Inertia::render("MyFiles", compact('files'));
+        $ancestors = FileResource::collection([...$folder->ancestors, $folder]);
+
+        $folder = new FileResource($folder);
+
+        return Inertia::render("MyFiles", compact('files', 'folder', 'ancestors'));
     }
 
     public function createFolder(StoreFolderRequest $request)
