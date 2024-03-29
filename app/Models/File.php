@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasCreatorAndUpdater;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,16 @@ class File extends Model
         return $this->belongsTo(File::class, 'parent_id');
     }
 
+    public function owner() : Attribute
+    {
+        return Attribute::make(
+            get: function (mixed $value, array $attributes) {
+                return $attributes['creator_id'] == auth()->id() ? 'me' :
+                    $this->user->name;
+            }
+        );
+    }
+
     /**
      * Determine if the given user ID owns the file.
      *
@@ -46,7 +57,7 @@ class File extends Model
 
     public function isRoot()
     {
-        return $this->parent_id === null;
+        return $this->parent_id == null;
     }
 
     protected static function boot()

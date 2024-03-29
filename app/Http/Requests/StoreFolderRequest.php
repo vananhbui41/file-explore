@@ -3,8 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Models\File;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class StoreFolderRequest extends ParentIdBaseRequest
@@ -22,9 +20,9 @@ class StoreFolderRequest extends ParentIdBaseRequest
                 'name' => [
                     'required',
                     Rule::unique(File::class, 'name')
-                    ->where('creator_id', auth()->id())
-                    ->where('parent_id', $this->parent_id)
-                    ->whereNull('deleted_at')
+                        ->where('creator_id', auth()->id())
+                        // ->where('parent_id', $this->parent_id)
+                        ->whereNull('deleted_at')
                 ],
             ]
         );
