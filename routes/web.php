@@ -28,10 +28,11 @@ Route::get('/', function () {
 
 Route::controller(FileController::class)
     ->middleware(['auth', 'verified'])->group(function () {
-        Route::get('/my-files/{folder?}', [FileController::class, 'myFiles'])
+        Route::get('/my-files/{folder?}', 'myFiles')
             ->where('folder', '(.*)')
             ->name('my-files');
-        Route::post('/folders/create', [FileController::class, 'createFolder'])->name('folder.create');
+        Route::post('/folders/create', 'createFolder')->name('folder.create');
+        Route::post('/file','store')->name('file.store');
     });
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
