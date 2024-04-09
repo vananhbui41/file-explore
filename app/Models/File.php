@@ -34,7 +34,7 @@ class File extends Model
         return $this->belongsTo(File::class, 'parent_id');
     }
 
-    public function owner() : Attribute
+    public function owner(): Attribute
     {
         return Attribute::make(
             get: function (mixed $value, array $attributes) {
@@ -60,11 +60,25 @@ class File extends Model
         return $this->parent_id == null;
     }
 
+    /**
+     * Get the size of the file in a human readable format.
+     *
+     * @return string
+     */
+    public function get_file_size()
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+
+        $power = $this->size > 0 ? floor(log($this->size, 1024)) : 0;
+
+        return number_format($this->size / pow(1024, $power), 2, '.', ',') . ' ' . $units[$power];
+    }
+
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function($model) {
+        static::creating(function ($model) {
             if (!$model->parent) {
                 return;
             }
