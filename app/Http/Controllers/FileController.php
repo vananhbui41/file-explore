@@ -81,6 +81,27 @@ class FileController extends Controller
         }
     }
 
+    public function destroy(Request $request) {
+        $data = $request->validated();
+        $parent = $request->parent;
+
+        if ($data['all']) {
+            $children = $parent->children;
+
+            foreach ($children as $child) {
+                $child->delete();
+            }
+
+            // todo: delete the files that are children of specific folders
+        } else {
+            foreach ($data['ids'] ?? [] as $id) {
+                $file = File::find($id);
+                $file->delete();
+            }
+        }
+
+        return to_route('my-files', ['folder' => $parent->path]);
+    }
     private function getRoot()
     {
         return File::query()->whereIsRoot()->where('creator_id', auth()->id())->firstOrFail();
