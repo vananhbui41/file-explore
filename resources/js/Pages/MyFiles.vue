@@ -53,9 +53,19 @@
             </ol>
         </nav>
         <div class="flex-1 overflow-auto">
+            <pre>{{ allSelected }}</pre>
+            <pre>{{ selected }}</pre>
             <table class="min-w-full">
                 <thead class="bg-gray-100 border-b">
                     <tr>
+                        <th
+                            class="text-sm font-medium text-grat-900 px-6 py-4 text-left w-[30px] max-w-[30px] pr-"
+                        >
+                            <Checkbox
+                                @change="onSelectAllChange()"
+                                v-model:checked="allSelected"
+                            />
+                        </th>
                         <th
                             class="text-sm font-medium text-grat-900 px-6 py-4 text-left"
                         >
@@ -82,9 +92,24 @@
                     <tr
                         v-for="file of allFiles.data"
                         :key="file.id"
+                        @click="($event) => toggleFileSelect(file)"
                         @dblclick="openFolder(file)"
-                        class="bg-white boder-b transition duration-300 ease-in-out hover:bg-gray-100 cursor-pointer"
+                        class="boder-b transition duration-300 ease-in-out hover:bg-blue-100 cursor-pointer"
+                        :class="
+                            selected[file.id] || allSelected
+                                ? 'bg-blue-50'
+                                : 'bg-white'
+                        "
                     >
+                        <td
+                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-[30px] max-w-[30px] pr-0"
+                        >
+                            <Checkbox
+                            @change="$event => onSelectCheckboxChange(file)"
+                                v-model="selected[file.id]"
+                                :checked="selected[file.id] || allSelected"
+                            />
+                        </td>
                         <td
                             class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center"
                         >
@@ -127,21 +152,23 @@ import FileIcon from "@/Components/app/FileIcon.vue";
 import { onMounted, ref } from "vue";
 import { onUpdated } from "vue";
 import { httpGet } from "@/Helper/http-helper.js";
+import Checkbox from "@/Components/Checkbox.vue";
 
 // Refs
+const allSelected = ref(false);
+const selected = ref({});
 const loadMoreIntersect = ref(null);
 
 const props = defineProps({
     files: Object,
     folder: Object,
-    ancestors: Object
-})
+    ancestors: Object,
+});
 
 const allFiles = ref({
     data: props.files.data,
     next: props.files.links.next,
 });
-
 
 // Methods
 function openFolder(file) {
@@ -165,6 +192,36 @@ function loadMore() {
         allFiles.value.next = res.links.next;
     });
 }
+
+function onSelectAllChange() {
+    allFiles.value.data.forEach((f) => {
+        selected.value[f.id] = allSelected.value;
+    });
+}
+
+function toggleFileSelect(file) {
+    selected.value[file.id] = !selected.value[file.id];
+    onSelectCheckboxChange(file);
+}
+
+function onSelectCheckboxChange(file) {
+    if (!selected.value[file.id]) {
+        allSelected.value = false
+    } else {
+        let checked  =  true;
+
+        for (let file of allFiles.value.data) {
+            if (!selected.value[file.id]) {
+                checked = false;
+                break;
+            }
+        }
+
+        allSelected.value = checked;
+    }
+}
+
+// TODO: Use Shift key to select multiple files
 
 // Hooks
 onUpdated(() => {
