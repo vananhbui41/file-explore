@@ -51,10 +51,12 @@
                     </div>
                 </li>
             </ol>
+
+            <div>
+                <DeleteFilesButton :delete-all="allSelected" :delete-ids="selectedIds" @delete="onDelete"/>
+            </div>
         </nav>
         <div class="flex-1 overflow-auto">
-            <pre>{{ allSelected }}</pre>
-            <pre>{{ selected }}</pre>
             <table class="min-w-full">
                 <thead class="bg-gray-100 border-b">
                     <tr>
@@ -149,10 +151,12 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Link, router } from "@inertiajs/vue3";
 import FileIcon from "@/Components/app/FileIcon.vue";
+import DeleteFilesButton from "@/Components/app/DeleteFilesButton.vue";
 import { onMounted, ref } from "vue";
 import { onUpdated } from "vue";
 import { httpGet } from "@/Helper/http-helper.js";
 import Checkbox from "@/Components/Checkbox.vue";
+import { computed } from "vue";
 
 // Refs
 const allSelected = ref(false);
@@ -169,6 +173,9 @@ const allFiles = ref({
     data: props.files.data,
     next: props.files.links.next,
 });
+
+// Computed
+const selectedIds = computed(() => Object.entries(selected.value).filter(a => a[1]).map(a => a[0]))
 
 // Methods
 function openFolder(file) {
@@ -222,6 +229,11 @@ function onSelectCheckboxChange(file) {
 }
 
 // TODO: Use Shift key to select multiple files
+
+function onDelete() {
+    allSelected.value = false;
+    selected .value = {};
+}
 
 // Hooks
 onUpdated(() => {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyFilesRequest;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\StoreFolderRequest;
 use App\Http\Resources\FileResource;
@@ -81,7 +82,7 @@ class FileController extends Controller
         }
     }
 
-    public function destroy(Request $request) {
+    public function destroy(DestroyFilesRequest $request) {
         $data = $request->validated();
         $parent = $request->parent;
 
@@ -96,10 +97,13 @@ class FileController extends Controller
         } else {
             foreach ($data['ids'] ?? [] as $id) {
                 $file = File::find($id);
-                $file->delete();
+                if ($file) {
+                    $file->delete();
+                }
             }
         }
 
+        // TODO: soft deletes of files to recover in the future 
         return to_route('my-files', ['folder' => $parent->path]);
     }
     private function getRoot()
