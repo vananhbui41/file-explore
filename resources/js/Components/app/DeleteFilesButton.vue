@@ -9,7 +9,7 @@
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            class="w-6 h-6"
+            class="w-6 h-6 mr-2"
         >
             <path
                 stroke-linecap="round"
@@ -31,7 +31,7 @@
 
 <script setup>
 import ConfirmationDialog from "@/Components/ConfirmationDialog.vue";
-import { showErrorDialog } from "@/event-bus";
+import { showErrorDialog, showSuccessNotification } from "@/event-bus";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
 
@@ -87,7 +87,7 @@ function onDeleteConfirm() {
             showDeleteDialog.value = false;
             emit('delete')
 
-            // Todo: Show success notification
+            showSuccessNotification('Selected files have been deleted')
         }
     })
 

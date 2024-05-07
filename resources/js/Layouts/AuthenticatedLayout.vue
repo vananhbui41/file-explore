@@ -25,6 +25,7 @@
             </template>
             <ErrorDialog />
             <FormProgress :form="fileUploadForm"/>
+            <Notification/>
         </main>
     </div>
 </template>
@@ -34,6 +35,7 @@ import Navigation from "@/Components/app/Navigation.vue";
 import SearchForm from "@/Components/app/SearchForm.vue";
 import UserSettingDropdown from "@/Components/app/UserSettingDropdown.vue";
 import FormProgress from "@/Components/app/FormProgress.vue";
+import Notification from "@/Components/Notification.vue";
 import { emitter, FILE_UPLOAD_STARTED, showErrorDialog } from "@/event-bus.js";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
