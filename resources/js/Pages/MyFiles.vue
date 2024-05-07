@@ -53,6 +53,7 @@
             </ol>
 
             <div>
+                <DownloadFilesButton :all="allSelected" :ids="selectedIds" class="mr-2"/>
                 <DeleteFilesButton :delete-all="allSelected" :delete-ids="selectedIds" @delete="onDelete"/>
             </div>
         </nav>
@@ -152,6 +153,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Link, router } from "@inertiajs/vue3";
 import FileIcon from "@/Components/app/FileIcon.vue";
 import DeleteFilesButton from "@/Components/app/DeleteFilesButton.vue";
+import DownloadFilesButton from "@/Components/app/DownloadFilesButton.vue";
 import { onMounted, ref } from "vue";
 import { onUpdated } from "vue";
 import { httpGet } from "@/Helper/http-helper.js";
