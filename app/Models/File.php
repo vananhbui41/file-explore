@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -92,5 +93,12 @@ class File extends Model
                 Storage::delete($model->storage_path);
             }
         });
+    }
+
+    public function moveToTrash()
+    {
+        $this->deleted_at = Carbon::now();
+
+        return $this->save();
     }
 }

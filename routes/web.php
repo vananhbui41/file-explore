@@ -31,10 +31,11 @@ Route::controller(FileController::class)
         Route::get('/my-files/{folder?}', 'myFiles')
             ->where('folder', '(.*)')
             ->name('my-files');
+        Route::get('/trash', 'trash')->name('trash');
         Route::post('/folders/create', 'createFolder')->name('folder.create');
         Route::post('/file', 'store')->name('file.store');
-        Route::post('/file', 'store')->name('file.store');
         Route::delete('/file', 'destroy')->name('file.delete');
+        Route::post('/file/restore','restore')->name('file.restore');
         Route::get('/file/download', 'download')->name('file.download');
 
     });
