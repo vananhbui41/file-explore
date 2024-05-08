@@ -2,7 +2,8 @@
     <AuthenticatedLayout>
         <nav class="flex items-center justify-end p-1 mb-3">
             <div>
-                <RestoreFilesButton :all-selected="allSelected" :selectedIds="selectedIds"/>
+                <DeleteForeverButton :all-selected="allSelected" :selected-ids="selectedIds" @delete="resetForm"/>
+                <RestoreFilesButton :all-selected="allSelected" :selectedIds="selectedIds" @restore="resetForm"/>
             </div>
         </nav>
         <div class="flex-1 overflow-auto">
@@ -81,6 +82,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import FileIcon from "@/Components/app/FileIcon.vue";
 import RestoreFilesButton from "@/Components/app/RestoreFilesButton.vue";
+import DeleteForeverButton from "@/Components/app/DeleteForeverButton.vue";
 import { onMounted, ref } from "vue";
 import { onUpdated } from "vue";
 import { httpGet } from "@/Helper/http-helper.js";
@@ -154,7 +156,7 @@ function onSelectCheckboxChange(file) {
 
 // TODO: Use Shift key to select multiple files
 
-function onDelete() {
+function resetForm() {
     allSelected.value = false;
     selected.value = {};
 }

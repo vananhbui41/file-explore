@@ -9,7 +9,6 @@ use App\Http\Requests\TrashFilesRequest;
 use App\Http\Resources\FileResource;
 use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -269,9 +268,25 @@ class FileController extends Controller
         return to_route('trash');
     }
 
-    public function deleteForever()
+    public function deleteForever(TrashFilesRequest $request)
     {
+        $data = $request->validated();
 
+        if ($data['all']) {
+            $children = File::onlyTrashed()->get();
+            foreach ($children as $child) {
+                $child->deleteForever();
+            }
+        } else {
+            $ids = $data['ids'] ?? [];
+            $children = File::onlyTrashed()->whereIn('id', $ids)->get();
+
+            foreach ($children as $child) {
+                $child->deleteForever();
+            }
+        }
+
+        return to_route('trash');
     }
 }
 
