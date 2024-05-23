@@ -1,7 +1,8 @@
 <template>
     <PrimaryButton
         @click="onDownloadClick"
-        class="inline-flex items-center px-4 py-2 text-sm font-medium"
+        class="inline-flex items-center px-4 py-2 font-medium"
+        style="text-transform: inherit;"
     >
         <svg
             xmlns="http://www.w3.org/2000/svg"
